@@ -7,5 +7,6 @@ run-modules() {
   for module in $modules_path/*.sh; do 
     [[ -e "$module" ]] || continue
     info "$module"
+    source "$module"
   done
 }
