@@ -2,8 +2,11 @@
 
 source ./modules/common.sh
 
+source ./modules/000-envs.sh
 source ./modules/001-uefi.sh
-source ./modules/002-network.sh
-source ./modules/003-filesystem.sh
-source ./modules/004-pacstrap.sh
+source ./modules/002-config.sh
+source ./modules/003-network.sh
+source ./modules/004-filesystem.sh
+source ./modules/005-pacstrap.sh
+source ./modules/009-chroot.sh
 
