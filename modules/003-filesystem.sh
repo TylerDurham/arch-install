@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+ESP_SIZE="2049MiB"            # EFI system partition size (2GB recommended)
+
 # =============================================================================
 # PRE-FLIGHT CHECKS
 # =============================================================================
@@ -49,5 +51,56 @@ fi
 
 info "Partitions created: ESP=${PART_ESP}  System=${PART_SYS}"
 
+# =============================================================================
+# FORMAT ESP
+# =============================================================================
 
+info "Formatting ESP as FAT32..."
+mkfs.fat -F 32 "${PART_ESP}"
 
+# =============================================================================
+# LUKS2 ENCRYPTION
+# =============================================================================
+
+info "Setting up LUKS2 encryption on ${PART_SYS}..."
+warn "You will be prompted to set and confirm your disk encryption passphrase."
+cryptsetup luksFormat "${PART_SYS}"
+
+info "Opening LUKS container..."
+cryptsetup open "${PART_SYS}" root
+
+LUKS_UUID=$(cryptsetup luksUUID "${PART_SYS}")
+info "LUKS UUID: ${LUKS_UUID}"
+info "Save this UUID — you will need it for the bootloader config!"
+echo "${LUKS_UUID}" > /tmp/luks_uuid.txt
+
+# =============================================================================
+# BTRFS SETUP
+# =============================================================================
+
+info "Formatting LUKS container as BTRFS..."
+mkfs.btrfs /dev/mapper/root
+
+info "Mounting BTRFS to create subvolumes..."
+mount /dev/mapper/root /mnt
+
+info "Creating BTRFS subvolumes..."
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@var_log
+btrfs subvolume create /mnt/@var_cache
+btrfs subvolume create /mnt/@snapshots
+
+info "Unmounting and remounting subvolumes with options..."
+umount /mnt
+
+BTRFS_OPTS="compress=zstd:1,noatime"
+mount -o "${BTRFS_OPTS},subvol=@"           /dev/mapper/root /mnt
+mount --mkdir -o "${BTRFS_OPTS},subvol=@home"      /dev/mapper/root /mnt/home
+mount --mkdir -o "${BTRFS_OPTS},subvol=@var_log"   /dev/mapper/root /mnt/var/log
+mount --mkdir -o "${BTRFS_OPTS},subvol=@var_cache" /dev/mapper/root /mnt/var/cache
+mount --mkdir -o "${BTRFS_OPTS},subvol=@snapshots" /dev/mapper/root /mnt/.snapshots
+mount --mkdir "${PART_ESP}" /mnt/boot
+
+info "Filesystem layout:"
+lsblk "${DISK}"
