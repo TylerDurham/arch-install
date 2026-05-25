@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    # We're not being sourced from another script... load our modules
+    ROOT_DIR="$(git rev-parse --show-toplevel)"
+    source "$ROOT/require.sh" io
+    PARENT_DIR=$ROOT_DIR
+fi
+
 if [ -z "$SCRIPT_DIR" ]; then
   SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
   PARENT_DIR=$(dirname $SCRIPT_DIR)

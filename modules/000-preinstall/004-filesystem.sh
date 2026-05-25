@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-if [ -z "$SCRIPT_DIR" ]; then
-  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-  source $SCRIPT_DIR/common.sh
-  source $SCRIPT_DIR/defaults.sh
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    # We're not being sourced from another script... load our modules
+    source "$(git rev-parse --show-toplevel)/require.sh" io defaults
 fi
 
 # =============================================================================
