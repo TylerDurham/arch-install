@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source ./modules/common.sh
+
+source ./modules/001-uefi.sh
+source ./modules/002-network.sh
+source ./modules/003-filesystem.sh
+
