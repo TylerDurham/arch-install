@@ -1,0 +1,29 @@
+
+# =============================================================================
+# HELPERS
+# =============================================================================
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
+
+info()    { echo -e "${GREEN}[INFO]${NC}  $*" >&2; }
+warn()    { echo -e "${YELLOW}[WARN]${NC}  $*" >&2 ; }
+die()     { echo -e "${RED}[ERROR]${NC} $*" >&2; exit 1; }
+
+confirm() {
+    read -rp "$1 [y/N] " ans
+    [[ "${ans,,}" == "y" ]] || die "Aborted."
+}
+
+prompt() {
+    local prompt="$1"
+    local default="$2"
+    local result
+    read -r -p "${prompt} [${default}]: " result
+    local value="${result:-$default}"
+
+    if [[ -z "$value" ]]; then
+        die "Aborted."
+    fi
+
+    echo "$value"
+}

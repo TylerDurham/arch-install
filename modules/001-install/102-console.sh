@@ -5,9 +5,11 @@ if [ -z "$SCRIPT_DIR" ]; then
 fi
 
 # =============================================================================
-# TIMEZONE & CLOCK
+# CONSOLE KEYMAP & FONT
 # =============================================================================
 
-info "Setting timezone to ${TIMEZONE}..."
-ln -sf "/usr/share/zoneinfo/${TIMEZONE}" /etc/localtime
-hwclock --systohc
+info "Setting console keymap and font..."
+{
+    echo "KEYMAP=${KEYMAP:-US}"
+    echo "FONT=${FONT}"
+} > /etc/vconsole.conf

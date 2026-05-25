@@ -2,13 +2,32 @@
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 MODE="${1:-PREINSTALL}"
 
-source "$SCRIPT_DIR/modules/common.sh"
-source "$SCRIPT_DIR/modules/defaults.sh"
+case "${MODE,,}" in 
+  preinstall)
+    MODULE_PATH="000-preinstall" ;;
+
+  install)
+    MODULE_PATH="001-install" ;;
+
+  postinstall)
+    MODULE_PATH="002-postinstall" ;;
+
+  *)
+    die "Invalid mode '$MODE'!" ;;
+esac
+
+source "$SCRIPT_DIR/require.sh" io modules
+
+run-modules "$SCRIPT_DIR/modules/$MODULE_PATH"
+
+exit 0
+
+
 
 if [[ "$MODE" == "PREINSTALL" ]]; then
   info "In mode '$MODE'."
 
-  for f in $SCRIPT_DIR/modules/00*.sh; do
+  for f in $SCRIPT_DIR/modules/000-preinstall; do
       [[ -e "$f" ]] || continue
       echo "$f"
       source "$f"
@@ -19,7 +38,7 @@ elif [[ "$MODE" == "CHROOT" ]]; then
 
   source "$SCRIPT_DIR/install_config.env"
 
-  for f in $SCRIPT_DIR/modules/01*.sh; do
+  for f in $SCRIPT_DIR/modules/1*.sh; do
       [[ -e "$f" ]] || continue
       echo "$f"
       source "$f"
