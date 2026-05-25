@@ -4,8 +4,10 @@
 # PASS VARIABLES TO CHROOT SCRIPT
 # =============================================================================
 
+directory=$(basename $SCRIPT_DIR)
+
 info "Writing config for chroot stage..."
-cat > /mnt/root/install_config.env <<EOF
+cat > /mnt/root/$directory/install_config.env <<EOF
 DISK="${DISK}"
 PART_ESP="${PART_ESP}"
 PART_SYS="${PART_SYS}"
@@ -20,7 +22,7 @@ EOF
 
 cp -r $SCRIPT_DIR/ /mnt/root/
 
-arch-chroot /mnt # bash /mnt/root/install
+arch-chroot /mnt bash /mnt/root/install CHROOT
 exit
 
 # =============================================================================
