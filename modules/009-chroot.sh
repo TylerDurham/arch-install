@@ -30,7 +30,7 @@ EOF
 
 cp -r $SCRIPT_DIR/ /mnt/root/
 
-arch-chroot /mnt bash /mnt/root/install CHROOT
+arch-chroot /mnt bash "/mnt/root/install CHROOT"
 exit
 
 # =============================================================================
