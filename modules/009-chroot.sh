@@ -20,7 +20,7 @@ EOF
 
 cp -r $SCRIPT_DIR/ /mnt/root/
 
-arch-chroot /mtn # bash /mnt/root/install
+arch-chroot /mnt # bash /mnt/root/install
 exit
 
 # =============================================================================
