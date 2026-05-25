@@ -20,6 +20,7 @@ elif [[ "$MODE" == "CHROOT" ]]; then
   for f in $SCRIPT_DIR/modules/01*.sh; do
       [[ -e "$f" ]] || continue
       echo "$f"
+      source "$f"
   done
 
 elif [[ "$MODE" == "POSTINSTALL" ]]; then
