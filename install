@@ -17,6 +17,8 @@ if [[ "$MODE" == "PREINSTALL" ]]; then
 elif [[ "$MODE" == "CHROOT" ]]; then
   info "In mode '$MODE'."
 
+  source "$SCRIPT_DIR/install_config.env"
+
   for f in $SCRIPT_DIR/modules/01*.sh; do
       [[ -e "$f" ]] || continue
       echo "$f"

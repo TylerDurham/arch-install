@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 
+if [ -z "$SCRIPT_DIR" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+  PARENT_DIR=$(dirname $SCRIPT_DIR)
+  source $SCRIPT_DIR/common.sh
+fi
+
 # =============================================================================
 # PASS VARIABLES TO CHROOT SCRIPT
 # =============================================================================
 
-directory=$(basename $SCRIPT_DIR)
+directory="arch-install" # $(basename $SCRIPT_DIR)
+path="/mnt/root/$directory/install_config.env"
 
-info "Writing config for chroot stage..."
+info "Writing config for chroot stage to '$path'..."
+exit 0
 cat > /mnt/root/$directory/install_config.env <<EOF
 DISK="${DISK}"
 PART_ESP="${PART_ESP}"
