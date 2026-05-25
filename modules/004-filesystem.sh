@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-ESP_SIZE="2049MiB"            # EFI system partition size (2GB recommended)
+if [ -z "$SCRIPT_DIR" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+  source $SCRIPT_DIR/common.sh
+  source $SCRIPT_DIR/defaults.sh
+fi
 
 # =============================================================================
 # PRE-FLIGHT CHECKS

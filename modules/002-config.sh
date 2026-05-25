@@ -1,4 +1,9 @@
-#!/usr/bin/env 
+#!/usr/bin/env bash
+
+if [ -z "$SCRIPT_DIR" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+  source $SCRIPT_DIR/common.sh
+fi
 
 detect_timezone() {
     info "Detecting timezone via IP geolocation..."

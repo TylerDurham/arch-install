@@ -1,12 +1,30 @@
 #!/usr/bin/env bash
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+MODE="${1:-PREINSTALL}"
 
-source ./modules/common.sh
+source "$SCRIPT_DIR/modules/common.sh"
+source "$SCRIPT_DIR/modules/defaults.sh"
 
-source ./modules/000-envs.sh
-source ./modules/001-uefi.sh
-source ./modules/002-config.sh
-source ./modules/003-network.sh
-source ./modules/004-filesystem.sh
-source ./modules/005-pacstrap.sh
-source ./modules/009-chroot.sh
+if [[ "$MODE" == "PREINSTALL" ]]; then
+  info "In mode '$MODE'."
+
+  for f in $SCRIPT_DIR/modules/00*.sh; do
+      [[ -e "$f" ]] || continue
+      echo "$f"
+      source "$f"
+  done
+
+elif [[ "$MODE" == "CHROOT" ]]; then
+  info "In mode '$MODE'."
+
+  for f in $SCRIPT_DIR/modules/01*.sh; do
+      [[ -e "$f" ]] || continue
+      echo "$f"
+  done
+
+elif [[ "$MODE" == "POSTINSTALL" ]]; then
+  info "IN $MODE"
+else
+  die "Mode '$MODE' not recognized!"
+fi
 
